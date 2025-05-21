@@ -20,12 +20,21 @@ class EmployeeRepository {
     }
     findMany() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.repository.find();
+            return this.repository.find({
+                relations: {
+                    address: true
+                }
+            });
         });
     }
     findOneById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.repository.findOneBy({ id });
+            return this.repository.findOne({
+                where: { id },
+                relations: {
+                    address: true
+                }
+            });
         });
     }
     update(id, employee) {
@@ -42,6 +51,11 @@ class EmployeeRepository {
     delete(id) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.repository.delete({ id });
+        });
+    }
+    remove(employee) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.repository.remove(employee); //for cascade
         });
     }
 }

@@ -1,14 +1,23 @@
+import { CreateAddressDto } from "../dto/create-address.dto";
+import Address from "../entities/address.entity";
 import Employee from "../entities/employee.entity";
 import EmployeeRepository from "../repository/employee.repository";
 
 class EmployeeService {
     constructor(private employeeRepository: EmployeeRepository) {}
 
-    async createEmployee(email: string, name: string): Promise<Employee> {
+    async createEmployee(email: string, name: string, age: number, address: CreateAddressDto): Promise<Employee> {
 
         const newEmployee = new Employee();
         newEmployee.name = name;
         newEmployee.email = email;
+        newEmployee.age = age;
+
+        const newAddress = new Address();
+        newAddress.line1 = address.line1;
+        newAddress.pincode = address.pincode;
+
+        newEmployee.address = newAddress;
         return this.employeeRepository.create(newEmployee);
     }
 
@@ -34,12 +43,22 @@ class EmployeeService {
 
     async deleteEmployee(id: number): Promise<void> {
 
-        const existingEmployee = this.employeeRepository.findOneById(id);
+        // const existingEmployee = this.employeeRepository.findOneById(id);
+        // if (existingEmployee) {
+        //     await this.employeeRepository.delete(id);
+        // }
+
+        const existingEmployee = await this.employeeRepository.findOneById(id);
         if (existingEmployee) {
-            await this.employeeRepository.delete(id);
+            await this.employeeRepository.remove(existingEmployee);
         }
         
+        
     }
+
+    
+
+
 
 }
 

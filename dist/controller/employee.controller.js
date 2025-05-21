@@ -8,7 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const httpException_1 = __importDefault(require("../exception/httpException"));
+const class_transformer_1 = require("class-transformer");
+const class_validator_1 = require("class-validator");
+const create_employee_dto_1 = require("../dto/create-employee.dto");
 class EmployeeController {
     constructor(employeeService, router) {
         this.employeeService = employeeService;
@@ -31,12 +38,22 @@ class EmployeeController {
         router.put(":id", this.updateEmployee);
         router.delete("/:id", this.deleteEmployee);
     }
-    createEmployee(req, res) {
+    createEmployee(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const email = req.body.email;
-            const name = req.body.name;
-            const savedEmployee = yield this.employeeService.createEmployee(email, name);
-            res.status(201).send(savedEmployee);
+            try {
+                const createEmployeeDto = (0, class_transformer_1.plainToInstance)(create_employee_dto_1.CreateEmployeeDto, req.body);
+                const errors = yield (0, class_validator_1.validate)(createEmployeeDto);
+                if (errors.length > 0) {
+                    console.log(JSON.stringify(errors));
+                    throw new httpException_1.default(400, JSON.stringify(errors));
+                }
+                const savedEmployee = yield this.employeeService.createEmployee(createEmployeeDto.email, createEmployeeDto.name, createEmployeeDto.age, createEmployeeDto.address //as Address
+                );
+                res.status(201).send(savedEmployee);
+            }
+            catch (error) {
+                next(error);
+            }
         });
     }
     getAllEmployees(req, res) {
@@ -45,11 +62,21 @@ class EmployeeController {
             res.status(200).send(employees);
         });
     }
-    getEmployeeById(req, res) {
+    getEmployeeById(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const id = Number(req.params.id);
-            const employee = yield this.employeeService.getEmployeeById(id);
-            res.status(200).send(employee);
+            try {
+                const id = Number(req.params.id);
+                const employee = yield this.employeeService.getEmployeeById(id);
+                if (!employee) {
+                    throw new httpException_1.default(404, 'employee not found :)');
+                }
+                res.status(200).send(employee);
+            }
+            catch (err) {
+                //res.send(400, "not found")
+                console.log(err);
+                next(err);
+            }
         });
     }
 }
