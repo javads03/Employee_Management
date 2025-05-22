@@ -14,16 +14,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const address_entity_1 = __importDefault(require("../entities/address.entity"));
 const employee_entity_1 = __importDefault(require("../entities/employee.entity"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 class EmployeeService {
     constructor(employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
-    createEmployee(email, name, age, address) {
+    createEmployee(email, name, age, role, address, password) {
         return __awaiter(this, void 0, void 0, function* () {
             const newEmployee = new employee_entity_1.default();
             newEmployee.name = name;
             newEmployee.email = email;
             newEmployee.age = age;
+            newEmployee.role = role;
+            newEmployee.password = yield bcrypt_1.default.hash(password, 10);
             const newAddress = new address_entity_1.default();
             newAddress.line1 = address.line1;
             newAddress.pincode = address.pincode;
@@ -41,27 +44,37 @@ class EmployeeService {
             return this.employeeRepository.findOneById(id);
         });
     }
-    updateEmployee(id, email, name) {
+    getEmployeeByEmail(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.employeeRepository.findByEmail(email);
+        });
+    }
+    updateEmployee(id, email, name, age, address) {
         return __awaiter(this, void 0, void 0, function* () {
             const existingEmployee = this.employeeRepository.findOneById(id);
             if (existingEmployee) {
                 const employee = new employee_entity_1.default();
                 employee.name = name;
                 employee.email = email;
-                yield this.employeeRepository.create(employee);
+                employee.age = age;
+                const newAddress = new address_entity_1.default();
+                newAddress.line1 = address.line1;
+                newAddress.pincode = address.pincode;
+                employee.address = newAddress;
+                yield this.employeeRepository.update(id, employee);
             }
         });
     }
     deleteEmployee(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            // const existingEmployee = this.employeeRepository.findOneById(id);
-            // if (existingEmployee) {
-            //     await this.employeeRepository.delete(id);
-            // }
-            const existingEmployee = yield this.employeeRepository.findOneById(id);
+            const existingEmployee = this.employeeRepository.findOneById(id);
             if (existingEmployee) {
-                yield this.employeeRepository.remove(existingEmployee);
+                yield this.employeeRepository.delete(id);
             }
+            // const existingEmployee = await this.employeeRepository.findOneById(id);
+            // if (existingEmployee) {
+            //     await this.employeeRepository.remove(existingEmployee);
+            // }
         });
     }
 }

@@ -26,6 +26,10 @@ class EmployeeRepository{
         });
     }
 
+    async findByEmail(email: string): Promise<Employee | null> {
+        return this.repository.findOneBy({ email });
+    }
+
     async update(id: number, employee: Employee): Promise<void> {
         await this.repository.save({ id, ...employee });
 
@@ -38,7 +42,7 @@ class EmployeeRepository{
     }
 
     async delete(id: number): Promise<void> {
-        await this.repository.delete({ id });
+        await this.repository.softDelete({ id });
         
     }
 

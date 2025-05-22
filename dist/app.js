@@ -15,19 +15,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 //import employeeRouter from "./employee_router";
 const loggerMiddleware_1 = __importDefault(require("./middlewares/loggerMiddleware"));
+const auth_middleware_1 = require("./middlewares/auth_middleware");
 const data_source_1 = __importDefault(require("./db/data-source"));
 const employee_route_1 = __importDefault(require("./routes/employee.route"));
+const auth_route_1 = __importDefault(require("./routes/auth.route"));
 const errorMiddleware_1 = require("./middlewares/errorMiddleware");
 const { Client } = require('pg');
 const server = (0, express_1.default)();
 server.use(express_1.default.json());
 server.use(loggerMiddleware_1.default);
-server.use("/employee", employee_route_1.default);
+server.use("/employee", auth_middleware_1.authMiddleware, employee_route_1.default);
+server.use("/auth", auth_route_1.default);
+server.use(errorMiddleware_1.errorMiddleware);
 server.get("/", (req, res) => {
     console.log(req.url);
     res.status(200).send("Hello world typescript");
 });
-server.use(errorMiddleware_1.errorMiddleware);
+//server.use(errorMiddleware);
 (() => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield data_source_1.default.initialize();

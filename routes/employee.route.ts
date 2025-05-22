@@ -12,4 +12,5 @@ const employeeRepository = new EmployeeRepository(datasource.getRepository(Emplo
 const employeeService = new EmployeeService(employeeRepository);
 const employeeController = new EmployeeController(employeeService, employeeRouter);
 
+export { employeeService };
 export default employeeRouter;
