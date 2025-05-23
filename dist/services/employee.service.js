@@ -41,7 +41,12 @@ class EmployeeService {
     }
     getEmployeeById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.employeeRepository.findOneById(id);
+            let employee = yield this.employeeRepository.findOneById(id);
+            if (!employee) {
+                throw new Error("Employee not found"); // for testing purpose
+            }
+            else
+                return employee;
         });
     }
     getEmployeeByEmail(email) {

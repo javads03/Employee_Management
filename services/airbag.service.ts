@@ -1,11 +1,7 @@
 // File: src/service/airbag.service.ts
 
-
-
 /**
-
  * Interface for crash sensor
-
  */
 
 export interface CrashSensor {

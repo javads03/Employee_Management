@@ -6,10 +6,15 @@ import datasource from "./db/data-source";
 import employeeRouter from "./routes/employee.route";
 import authRouter from "./routes/auth.route"
 import { errorMiddleware } from "./middlewares/errorMiddleware";
+import { LoggerService } from "./services/logger.service";
+
+
 
 const { Client } = require('pg');
 
 const server = express();
+const logger = LoggerService.getInstance('app()');
+
 server.use(express.json());
 server.use(loggerMiddleware);
 
@@ -29,14 +34,15 @@ server.get("/", (req, res) => {
 (async () => {
   try{
     await datasource.initialize();
-    console.log('connected');
+    logger.info('connected');
+    server.listen(3000, () => {
+    logger.info("server listening to 3000");
+  });
   }catch{
-    console.error('Failed to connect to DB');
+    logger.error('Failed to connect to DB');
     process.exit(1);
   }
-  server.listen(3000, () => {
-  console.log("server listening to 3000");
-});
+  
 })();
 
 

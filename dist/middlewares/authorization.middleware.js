@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authorizationMiddleware = void 0;
 const employee_entity_1 = require("../entities/employee.entity");
 const httpException_1 = __importDefault(require("../exception/httpException"));
+//export const checkRole = {role: EmployeeRole} =>
 const authorizationMiddleware = (req, res, next) => {
     var _a;
     const role = (_a = req.user) === null || _a === void 0 ? void 0 : _a.role;

@@ -30,7 +30,12 @@ class EmployeeService {
     }
 
     async getEmployeeById(id: number): Promise<Employee> {
-        return this.employeeRepository.findOneById(id);
+        let employee = await this.employeeRepository.findOneById(id);
+        if (!employee) {
+            throw new Error("Employee not found")// for testing purpose
+        }
+        else
+            return employee;
     }
 
     async getEmployeeByEmail(email: string): Promise<Employee> {
