@@ -1,12 +1,19 @@
-import { Column,  Entity, OneToOne, JoinColumn } from "typeorm";
+import { Column,  Entity, OneToOne, JoinColumn, ManyToOne, Unique } from "typeorm";
 import AbstractEntity from "./abstract.entity";
 import Address from "./address.entity";
+import Department from "./department.entity";
 
 export enum EmployeeRole {
   UI = 'UI',
   UX = 'UX',
   DEVELOPER = 'DEVELOPER',
   HR = 'HR'
+}
+
+export enum Status {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  PROBATION = 'PROBATION'
 }
 
 @Entity()
@@ -22,11 +29,9 @@ class Employee extends AbstractEntity{
     age: number;
 
     @OneToOne(() => Address, (address) => address.employee, {
-      cascade: true,
-      onDelete: 'CASCADE'
+    cascade: true
     })
-    @JoinColumn()
-    address: Address;
+    address: Address
 
     @Column()
     password: string;
@@ -37,6 +42,27 @@ class Employee extends AbstractEntity{
     default: EmployeeRole.DEVELOPER
     })
     role: EmployeeRole
+
+    @ManyToOne(() => Department, (department) => department.employees)
+    @JoinColumn()
+    department: Department;
+
+    @Column()
+    employeeId: string;
+
+    @Column()
+    dataOfJoining: Date;
+
+    @Column()
+    experience: number;
+
+    @Column({
+    type: 'enum',
+    enum: Status,
+    default: Status.ACTIVE
+    })
+    status: Status;
+
 
   }
   

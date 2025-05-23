@@ -21,12 +21,14 @@ const employee_route_1 = __importDefault(require("./routes/employee.route"));
 const auth_route_1 = __importDefault(require("./routes/auth.route"));
 const errorMiddleware_1 = require("./middlewares/errorMiddleware");
 const logger_service_1 = require("./services/logger.service");
+const department_route_1 = __importDefault(require("./routes/department.route"));
 const { Client } = require('pg');
 const server = (0, express_1.default)();
 const logger = logger_service_1.LoggerService.getInstance('app()');
 server.use(express_1.default.json());
 server.use(loggerMiddleware_1.default);
 server.use("/employee", auth_middleware_1.authMiddleware, employee_route_1.default);
+server.use("/department", auth_middleware_1.authMiddleware, department_route_1.default);
 server.use("/auth", auth_route_1.default);
 server.use(errorMiddleware_1.errorMiddleware);
 server.get("/", (req, res) => {

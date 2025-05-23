@@ -47,4 +47,28 @@ __decorate([
     (0, class_validator_1.IsEnum)(employee_entity_1.EmployeeRole),
     __metadata("design:type", String)
 ], CreateEmployeeDto.prototype, "role", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateEmployeeDto.prototype, "departmentId", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateEmployeeDto.prototype, "employeeId", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsDateString)(),
+    __metadata("design:type", Date)
+], CreateEmployeeDto.prototype, "dateOfJoining", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateEmployeeDto.prototype, "experience", void 0);
+__decorate([
+    (0, class_validator_1.IsEnum)(employee_entity_1.Status),
+    __metadata("design:type", String)
+], CreateEmployeeDto.prototype, "status", void 0);
 //# sourceMappingURL=create-employee.dto.js.map

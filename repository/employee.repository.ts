@@ -30,6 +30,10 @@ class EmployeeRepository{
         return this.repository.findOneBy({ email });
     }
 
+    async findByDept(department_id: number): Promise<Employee | null> {
+        return this.repository.findOneBy({ department: { id: department_id } });
+    }
+
     async update(id: number, employee: Employee): Promise<void> {
         await this.repository.save({ id, ...employee });
 
@@ -46,10 +50,10 @@ class EmployeeRepository{
         
     }
 
-    async remove(employee: Employee): Promise<void> {
+    // async remove(employee: Employee): Promise<void> {
         
-        await this.repository.remove(employee); //for cascade
-    }
+    //     await this.repository.remove(employee); //for cascade
+    // }
     
 }
 

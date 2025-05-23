@@ -5,10 +5,12 @@ import HttpException from "../exception/httpException";
 
 //export const checkRole = {role: EmployeeRole} =>
 
-export const authorizationMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const role = req.user?.role
-    if (role!== EmployeeRole.HR) {
-        throw new HttpException(403, "User has no privilege to access the resource")
+export const authorizationMiddleware = (role: EmployeeRole[]) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const userRole = req.user.role
+        if (!role.includes(userRole)){
+            throw new HttpException(403,"No access")
+        }
+        next()
     }
-    next()
 }

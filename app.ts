@@ -7,6 +7,7 @@ import employeeRouter from "./routes/employee.route";
 import authRouter from "./routes/auth.route"
 import { errorMiddleware } from "./middlewares/errorMiddleware";
 import { LoggerService } from "./services/logger.service";
+import departmentRouter from "./routes/department.route";
 
 
 
@@ -20,6 +21,7 @@ server.use(loggerMiddleware);
 
 
 server.use("/employee", authMiddleware, employeeRouter);
+server.use("/department", authMiddleware, departmentRouter);
 server.use("/auth", authRouter);
 
 server.use(errorMiddleware);
